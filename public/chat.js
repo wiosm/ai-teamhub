@@ -26,7 +26,9 @@ userInput.addEventListener("keydown", function (e) {
 sendButton.addEventListener("click", sendMessage);
 
 async function sendMessage() {
-  const message = userInput.value.trim();
+  input = userInput.value.trim();
+  const message = applyMarkdownBold(input);
+
   if (message === "" || isProcessing) return;
 
   isProcessing = true;
@@ -57,7 +59,7 @@ async function sendMessage() {
         <p></p>
       </div>
     `;
-    // chatMessages.appendChild(assistantMessageEl);
+    chatMessages.appendChild("A");
     const assistantTextEl = assistantMessageEl.querySelector("p");
 
     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -204,7 +206,7 @@ function addMessageToChat(role, content) {
     `;
   }
 
-  // chatMessages.appendChild(messageEl);
+  chatMessages.appendChild(messageEl);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
