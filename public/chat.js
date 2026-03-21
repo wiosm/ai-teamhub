@@ -113,7 +113,8 @@ async function sendMessage() {
               content = jsonData.choices[0].delta.content;
             }
             if (content) {
-              responseText += content;
+               const safeContent = applyMarkdownBold(escapeHtml(content));
+              responseText += safeContent;
               flushAssistantText();
             }
           } catch (e) {
