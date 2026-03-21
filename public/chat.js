@@ -57,6 +57,7 @@ async function sendMessage() {
         <p></p>
       </div>
     `;
+    
     chatMessages.appendChild(assistantMessageEl);
     const assistantTextEl = assistantMessageEl.querySelector("p");
 
@@ -176,10 +177,15 @@ async function sendMessage() {
   }
 }
 
+function applyMarkdownBold(str) {
+  const markdownBold = /\*\*(.+?)\*\*(?!\*)/g;
+  return str.replace(markdownBold, '<strong>$1</strong>');
+}
+
 function addMessageToChat(role, content) {
   const messageEl = document.createElement("div");
   messageEl.className = `message ${role}-message`;
-
+  const safeContent = applyMarkdownBold(escapeHtml(content));
   if (role === "user") {
     messageEl.innerHTML = `
       <div class="avatar">
@@ -189,7 +195,7 @@ function addMessageToChat(role, content) {
         </svg>
       </div>
       <div class="message-content">
-        <p>${escapeHtml(content)}</p>
+        <p>${safeContent}</p>
       </div>
     `;
   } else {
@@ -202,7 +208,7 @@ function addMessageToChat(role, content) {
         </svg>
       </div>
       <div class="message-content">
-        <p>${escapeHtml(content)}</p>
+        <p>${safeContent}</p>
       </div>
     `;
   }
