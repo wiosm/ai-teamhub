@@ -179,6 +179,7 @@ async function sendMessage() {
 function addMessageToChat(role, content) {
   const messageEl = document.createElement("div");
   messageEl.className = `message ${role}-message`;
+  const safeContent = applyMarkdownBold(escapeHtml(content));
 
   if (role === "user") {
     messageEl.innerHTML = `
@@ -188,9 +189,7 @@ function addMessageToChat(role, content) {
           <circle cx="12" cy="7" r="4"/>
         </svg>
       </div>
-      <div class="message-content">
-        <p>${escapeHtml(content)}</p>
-      </div>
+     <div class="message-content"><p>${safeContent}</p></div>
     `;
   } else {
     messageEl.innerHTML = `
@@ -201,9 +200,7 @@ function addMessageToChat(role, content) {
           <path d="M2 12l10 5 10-5"/>
         </svg>
       </div>
-      <div class="message-content">
-        <p>${escapeHtml(content)}</p>
-      </div>
+     <div class="message-content"><p>${safeContent}</p></div>
     `;
   }
 
@@ -211,19 +208,15 @@ function addMessageToChat(role, content) {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-function escapeHtml(text) {
-  // 1️⃣  Create a temporary <div> and let the browser do the heavy‑lifting
-  const div = document.createElement('div');
-  div.textContent = text;          // <-- this automatically escapes &, <, >, ", '
-  let escaped = div.innerHTML;     // now we have a fully‑escaped string
-
-  // 2️⃣  Replace Markdown bold (**…**) with <strong>…</strong>
-  //     The negative look‑ahead (?!\*) makes sure we don't match *** (which would be bold+italic in full Markdown)
+function applyMarkdownBold(str) {
   const markdownBold = /\*\*(.+?)\*\*(?!\*)/g;
-  escaped = escaped.replace(markdownBold, '<strong>$1</strong>');
+  return str.replace(markdownBold, '<strong>$1</strong>');
+}
 
-  // 3️⃣  Return the safe, formatted HTML
-  return escaped;
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
 }
 
 function consumeSseEvents(buffer) {
