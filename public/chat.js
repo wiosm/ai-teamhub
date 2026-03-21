@@ -165,7 +165,7 @@ async function sendMessage() {
     console.error("Error:", error);
     addMessageToChat(
       "assistant",
-      "Sorry, there was an error processing your request."
+      "**Sorry, there was an error processing your request.**"
     );
   } finally {
     typingIndicator.classList.remove("visible");
@@ -212,9 +212,18 @@ function addMessageToChat(role, content) {
 }
 
 function escapeHtml(text) {
-  const div = document.createElement("div");
-  div.textContent = text;
-  return div.innerHTML;
+  // 1️⃣  Create a temporary <div> and let the browser do the heavy‑lifting
+  const div = document.createElement('div');
+  div.textContent = text;          // <-- this automatically escapes &, <, >, ", '
+  let escaped = div.innerHTML;     // now we have a fully‑escaped string
+
+  // 2️⃣  Replace Markdown bold (**…**) with <strong>…</strong>
+  //     The negative look‑ahead (?!\*) makes sure we don't match *** (which would be bold+italic in full Markdown)
+  const markdownBold = /\*\*(.+?)\*\*(?!\*)/g;
+  escaped = escaped.replace(markdownBold, '<strong>$1</strong>');
+
+  // 3️⃣  Return the safe, formatted HTML
+  return escaped;
 }
 
 function consumeSseEvents(buffer) {
