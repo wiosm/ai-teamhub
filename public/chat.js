@@ -114,7 +114,7 @@ async function sendMessage() {
             }
             if (content) {
                const safeContent = applyMarkdownBold(escapeHtml(content));
-              responseText += safeContent;
+              responseText += "A";
               flushAssistantText();
             }
           } catch (e) {
@@ -148,7 +148,7 @@ async function sendMessage() {
           if (content) {
              const safeContent = applyMarkdownBold(escapeHtml(content));
 
-            responseText += safeContent;
+              responseText += "A";
             flushAssistantText();
           }
         } catch (e) {
