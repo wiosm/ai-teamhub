@@ -59,7 +59,9 @@ async function sendMessage() {
         <p></p>
       </div>
     `;
-    chatMessages.appendChild("A");
+    const safeContent = applyMarkdownBold(escapeHtml(assistantMessageEl));
+
+    chatMessages.appendChild(safeContent);
     const assistantTextEl = assistantMessageEl.querySelector("p");
 
     chatMessages.scrollTop = chatMessages.scrollHeight;
