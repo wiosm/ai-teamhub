@@ -64,7 +64,6 @@ async function sendMessage() {
         <p></p>
       </div>
     `;
-    const safeContent = applyMarkdownBold(assistantMessageEl);
 
     chatMessages.appendChild(assistantMessageEl);
     const assistantTextEl = assistantMessageEl.querySelector("p");
