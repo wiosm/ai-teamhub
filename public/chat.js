@@ -25,6 +25,11 @@ userInput.addEventListener("keydown", function (e) {
 
 sendButton.addEventListener("click", sendMessage);
 
+function applyMarkdownBold(str) {
+  const markdownBold = /\*\*(.+?)\*\*(?!\*)/g;
+  return str.replace(markdownBold, '<strong>$1</strong>');
+}
+
 async function sendMessage() {
   input = userInput.value.trim();
   const message = applyMarkdownBold(input);
@@ -59,7 +64,7 @@ async function sendMessage() {
         <p></p>
       </div>
     `;
-    const safeContent = applyMarkdownBold(escapeHtml(assistantMessageEl));
+    const safeContent = applyMarkdownBold(assistantMessageEl);
 
     chatMessages.appendChild(safeContent);
     const assistantTextEl = assistantMessageEl.querySelector("p");
@@ -210,11 +215,6 @@ function addMessageToChat(role, content) {
 
   chatMessages.appendChild(messageEl);
   chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-function applyMarkdownBold(str) {
-  const markdownBold = /\*\*(.+?)\*\*(?!\*)/g;
-  return str.replace(markdownBold, '<strong>$1</strong>');
 }
 
 function escapeHtml(text) {
