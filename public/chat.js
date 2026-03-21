@@ -25,11 +25,6 @@ userInput.addEventListener("keydown", function (e) {
 
 sendButton.addEventListener("click", sendMessage);
 
-function applyMarkdownBold(str) {
-  const markdownBold = /\*\*(.+?)\*\*(?!\*)/g;
-  return str.replace(markdownBold, '<strong>$1</strong>');
-}
-
 async function sendMessage() {
   const message = userInput.value.trim();
   if (message === "" || isProcessing) return;
