@@ -57,8 +57,8 @@ async function sendMessage() {
         <p></p>
       </div>
     `;
-    
-    chatMessages.appendChild('A' + assistantMessageEl);
+    chatMessages.appendChild(assistantMessageEl);
+    chatMessages.appendChild(assistantMessageEl);
     const assistantTextEl = assistantMessageEl.querySelector("p");
 
     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -212,7 +212,7 @@ function addMessageToChat(role, content) {
       </div>
     `;
   }
-    chatMessages.appendChild('A' + messageEl);
+  chatMessages.appendChild(messageEl);
 
   chatMessages.appendChild(messageEl);
   chatMessages.scrollTop = chatMessages.scrollHeight;
