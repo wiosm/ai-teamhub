@@ -57,7 +57,7 @@ async function sendMessage() {
         <p></p>
       </div>
     `;
-    chatMessages.appendChild(assistantMessageEl);
+    // chatMessages.appendChild(assistantMessageEl);
     const assistantTextEl = assistantMessageEl.querySelector("p");
 
     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -113,8 +113,7 @@ async function sendMessage() {
               content = jsonData.choices[0].delta.content;
             }
             if (content) {
-               const safeContent = applyMarkdownBold(escapeHtml(content));
-              responseText += "A";
+              responseText += content;
               flushAssistantText();
             }
           } catch (e) {
@@ -146,9 +145,7 @@ async function sendMessage() {
             content = jsonData.choices[0].delta.content;
           }
           if (content) {
-             const safeContent = applyMarkdownBold(escapeHtml(content));
-
-              responseText += "A";
+            responseText += content;
             flushAssistantText();
           }
         } catch (e) {
@@ -162,8 +159,7 @@ async function sendMessage() {
     }
 
     if (responseText.length > 0) {
-      const safeContent = applyMarkdownBold(escapeHtml(responseText));
-      chatHistory.push({ role: "assistant", content: safeContent });
+      chatHistory.push({ role: "assistant", content: responseText });
     }
   } catch (error) {
     console.error("Error:", error);
@@ -208,7 +204,7 @@ function addMessageToChat(role, content) {
     `;
   }
 
-  chatMessages.appendChild(messageEl);
+  // chatMessages.appendChild(messageEl);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
