@@ -11,7 +11,7 @@ import { Env, ChatMessage } from "./types";
 
 // Model ID for Workers AI model
 // https://developers.cloudflare.com/workers-ai/models/
-const MODEL_ID = "@cf/deepseek-ai/deepseek-coder-6.7b-base";
+const MODEL_ID = "@cf/moonshotai/kimi-k2.5";
 
 // Default system prompt
 const SYSTEM_PROMPT =
