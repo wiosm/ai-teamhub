@@ -159,7 +159,8 @@ async function sendMessage() {
     }
 
     if (responseText.length > 0) {
-      chatHistory.push({ role: "assistant", content: responseText });
+      const safeContent = applyMarkdownBold(escapeHtml(responseText));
+      chatHistory.push({ role: "assistant", content: safeContent });
     }
   } catch (error) {
     console.error("Error:", error);
