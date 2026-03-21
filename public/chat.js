@@ -31,9 +31,7 @@ function applyMarkdownBold(str) {
 }
 
 async function sendMessage() {
-  input = userInput.value.trim();
-  const message = applyMarkdownBold(input);
-
+  const message = userInput.value.trim();
   if (message === "" || isProcessing) return;
 
   isProcessing = true;
@@ -64,7 +62,6 @@ async function sendMessage() {
         <p></p>
       </div>
     `;
-
     chatMessages.appendChild(assistantMessageEl);
     const assistantTextEl = assistantMessageEl.querySelector("p");
 
@@ -187,7 +184,6 @@ async function sendMessage() {
 function addMessageToChat(role, content) {
   const messageEl = document.createElement("div");
   messageEl.className = `message ${role}-message`;
-  const safeContent = applyMarkdownBold(escapeHtml(content));
 
   if (role === "user") {
     messageEl.innerHTML = `
@@ -197,7 +193,9 @@ function addMessageToChat(role, content) {
           <circle cx="12" cy="7" r="4"/>
         </svg>
       </div>
-     <div class="message-content"><p>${safeContent}</p></div>
+      <div class="message-content">
+        <p>${escapeHtml(content)}</p>
+      </div>
     `;
   } else {
     messageEl.innerHTML = `
@@ -208,7 +206,9 @@ function addMessageToChat(role, content) {
           <path d="M2 12l10 5 10-5"/>
         </svg>
       </div>
-     <div class="message-content"><p>${safeContent}</p></div>
+      <div class="message-content">
+        <p>${escapeHtml(content)}</p>
+      </div>
     `;
   }
 
