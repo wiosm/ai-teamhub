@@ -493,27 +493,6 @@
             </div>
             <div class="message-content">
               <p class="markdown">Hello! I'm **TeamHub AI**. How can I help you today?</p>
-              <script>
-              /**
-               * Replace **text** with <strong class="markdown-bold">text</strong>
-               * Works on any element that has the class "markdown".
-               */
-              document.querySelectorAll('.markdown').forEach(el => {
-                // Use a RegExp with the "g" flag to replace *all* occurrences.
-                // The pattern:
-                //   \*\*          – two literal asterisks
-                //   (.+?)         – capture the smallest possible string (lazy)
-                //   \*\*          – closing two asterisks
-                //   (?!\*)        – make sure we don't match *** (which would be bold+italic in full Markdown)
-                const markdownBold = /\*\*(.+?)\*\*(?!\*)/g;
-
-                // Replace the markdown with a <strong> element.
-                // Using innerHTML is safe here because we are only inserting our own <strong>.
-                // If your source contains user‑generated HTML you should sanitize it first.
-                el.innerHTML = el.textContent.replace(markdownBold,
-                  '<strong class="markdown-bold">$1</strong>');
-              });
-            </script>
             </div>
           </div>
         </div>

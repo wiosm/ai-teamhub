@@ -87,7 +87,7 @@ async function sendMessage() {
     let buffer = "";
 
     const flushAssistantText = () => {
-      assistantTextEl.textContent = responseText;
+      assistantTextEl.innerHTML = applyMarkdownBold(escapeHtml(responseText));
       chatMessages.scrollTop = chatMessages.scrollHeight;
     };
 
