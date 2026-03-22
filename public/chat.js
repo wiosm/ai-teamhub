@@ -73,13 +73,8 @@ async function sendMessage() {
       }),
     });
 
-    if (!response.ok) {
-      throw new Error("Failed to get response");
-    }
-
-    if (!response.body) {
-      throw new Error("Response body is null");
-    }
+    if (!response.ok) throw new Error("Failed to get response");
+    if (!response.body) throw new Error("Response body is null");
 
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
@@ -87,7 +82,7 @@ async function sendMessage() {
     let buffer = "";
 
     const flushAssistantText = () => {
-      assistantTextEl.innerHTML = applyMarkdownFormatting(escapeHtml(responseText));
+      assistantTextEl.innerHTML = applyMarkdownFormatting(responseText);
       chatMessages.scrollTop = chatMessages.scrollHeight;
     };
 
@@ -99,16 +94,11 @@ async function sendMessage() {
       if (done) {
         const parsed = consumeSseEvents(buffer + "\n\n");
         for (const data of parsed.events) {
-          if (data === "[DONE]") {
-            break;
-          }
+          if (data === "[DONE]") break;
           try {
             const jsonData = JSON.parse(data);
             let content = "";
-            if (
-              typeof jsonData.response === "string" &&
-              jsonData.response.length > 0
-            ) {
+            if (typeof jsonData.response === "string" && jsonData.response.length > 0) {
               content = jsonData.response;
             } else if (jsonData.choices?.[0]?.delta?.content) {
               content = jsonData.choices[0].delta.content;
@@ -137,10 +127,7 @@ async function sendMessage() {
         try {
           const jsonData = JSON.parse(data);
           let content = "";
-          if (
-            typeof jsonData.response === "string" &&
-            jsonData.response.length > 0
-          ) {
+          if (typeof jsonData.response === "string" && jsonData.response.length > 0) {
             content = jsonData.response;
           } else if (jsonData.choices?.[0]?.delta?.content) {
             content = jsonData.choices[0].delta.content;
@@ -154,9 +141,7 @@ async function sendMessage() {
         }
       }
 
-      if (sawDone) {
-        break;
-      }
+      if (sawDone) break;
     }
 
     if (responseText.length > 0) {
@@ -164,10 +149,7 @@ async function sendMessage() {
     }
   } catch (error) {
     console.error("Error:", error);
-    addMessageToChat(
-      "assistant",
-      "**Sorry, there was an error processing your request.**"
-    );
+    addMessageToChat("assistant", "**Sorry, there was an error processing your request.**");
   } finally {
     typingIndicator.classList.remove("visible");
     isProcessing = false;
@@ -180,9 +162,9 @@ async function sendMessage() {
 // Markdown formatting: bold, italic, inline code
 function applyMarkdownFormatting(str) {
   // Bold: **text**
-  str = str.replace(/\*\*(.+?)\*\*(?!\*)/g, '<strong>$1</strong>');
+  str = str.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   // Italic: *text*
-  str = str.replace(/(^|[^*])\*(?!\*)(.+?)\*(?!\*)([^*]|$)/g, '$1<em>$2</em>$3');
+  str = str.replace(/(^|[^*])\*(.+?)\*(?!\*)/g, '$1<em>$2</em>');
   // Inline code: `code`
   str = str.replace(/`([^`]+)`/g, '<code>$1</code>');
   return str;
@@ -191,7 +173,7 @@ function applyMarkdownFormatting(str) {
 function addMessageToChat(role, content) {
   const messageEl = document.createElement("div");
   messageEl.className = `message ${role}-message`;
-  const safeContent = applyMarkdownFormatting(escapeHtml(content));
+  const formattedContent = applyMarkdownFormatting(content);
   messageEl.innerHTML = `
     <div class="avatar">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -201,17 +183,11 @@ function addMessageToChat(role, content) {
       </svg>
     </div>
     <div class="message-content">
-      <p>${safeContent}</p>
+      <p>${formattedContent}</p>
     </div>
   `;
   chatMessages.appendChild(messageEl);
   chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-function escapeHtml(text) {
-  const div = document.createElement("div");
-  div.textContent = text;
-  return div.innerHTML;
 }
 
 function consumeSseEvents(buffer) {
