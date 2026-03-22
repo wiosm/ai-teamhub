@@ -87,7 +87,7 @@ async function sendMessage() {
     let buffer = "";
 
     const flushAssistantText = () => {
-      assistantTextEl.innerHTML = applyMarkdownBold(escapeHtml(responseText));
+      assistantTextEl.innerHTML = applyMarkdownFormatting(escapeHtml(responseText));
       chatMessages.scrollTop = chatMessages.scrollHeight;
     };
 
@@ -177,42 +177,33 @@ async function sendMessage() {
   }
 }
 
-function applyMarkdownBold(str) {
-  const markdownBold = /\*\*(.+?)\*\*(?!\*)/g;
-  return str.replace(markdownBold, '<strong>$1</strong>');
+// Markdown formatting: bold, italic, inline code
+function applyMarkdownFormatting(str) {
+  // Bold: **text**
+  str = str.replace(/\*\*(.+?)\*\*(?!\*)/g, '<strong>$1</strong>');
+  // Italic: *text*
+  str = str.replace(/(^|[^*])\*(?!\*)(.+?)\*(?!\*)([^*]|$)/g, '$1<em>$2</em>$3');
+  // Inline code: `code`
+  str = str.replace(/`([^`]+)`/g, '<code>$1</code>');
+  return str;
 }
 
 function addMessageToChat(role, content) {
   const messageEl = document.createElement("div");
   messageEl.className = `message ${role}-message`;
-  const safeContent = applyMarkdownBold(escapeHtml(content));
-  if (role === "user") {
-    messageEl.innerHTML = `
-      <div class="avatar">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
-        </svg>
-      </div>
-      <div class="message-content">
-        <p>${safeContent}</p>
-      </div>
-    `;
-  } else {
-    messageEl.innerHTML = `
-      <div class="avatar">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-          <path d="M2 17l10 5 10-5"/>
-          <path d="M2 12l10 5 10-5"/>
-        </svg>
-      </div>
-      <div class="message-content">
-        <p>${safeContent}</p>
-      </div>
-    `;
-  }
-
+  const safeContent = applyMarkdownFormatting(escapeHtml(content));
+  messageEl.innerHTML = `
+    <div class="avatar">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        ${role === "user" 
+          ? '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>' 
+          : '<path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>'}
+      </svg>
+    </div>
+    <div class="message-content">
+      <p>${safeContent}</p>
+    </div>
+  `;
   chatMessages.appendChild(messageEl);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
